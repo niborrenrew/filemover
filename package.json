@@ -27,9 +27,9 @@
     {
       "name": "filemover",
       "title": "Filemover",
-      "description": "Moves selected FIles",
+      "description": "Moves selected Files",
       "mode": "view",
-      "subtitle": "Moves selected FIles"
+      "subtitle": "Moves selected Files"
     }
   ],
   "title": "Filemover",
