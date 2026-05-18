@@ -7,7 +7,7 @@ Filemover is a highly efficient Raycast extension that allows you to instantly m
 - **System-Wide Detection:** Automatically detects any selected files in macOS Finder or on your Desktop. No need to pass files manually.
 - **Smart Duplicate Handling:** Safely handles filename conflicts. If a file already exists in the destination folder, Filemover automatically appends a number (e.g., `(1)`) to the new file, ensuring your workflow is never interrupted by error popups.
 - **Favorites & Recents:** Add your most-used folders to Favorites, or just let Filemover track your 5 most recently used folders for lightning-fast repetitive sorting.
-- **Move or Copy:** Press `Enter` to move files, or use `Cmd + Enter` to copy them instead.
+- **Move or Copy:** Press `Enter` to move files, or use `Cmd + D` to copy them instead.
 - **Create New Folders:** Hit `Cmd + N` to create a brand new directory on-the-fly and move your files directly into it.
 - **Custom Destinations:** Use `Cmd + Shift + F` to pick any one-off destination folder from your system.
 - **Detailed Preview:** Always see exactly which files are queued up in the Raycast detail view before confirming the move.
@@ -19,7 +19,7 @@ Filemover is a highly efficient Raycast extension that allows you to instantly m
 3. The extension will display your Favorite, Recent, and Default (Downloads, Desktop, Documents) folders.
 4. Highlight a target folder and press:
    - `Enter` to Move
-   - `Cmd + Enter` to Copy
+   - `Cmd + D` to Copy
    - `Cmd + Shift + F` to pick a custom folder
    - `Cmd + N` to create a new folder and move the files there
 

@@ -335,7 +335,7 @@ export default function Command() {
                         onAction={() =>
                           handleAction(folder.path, folder.name, true)
                         }
-                        shortcut={{ modifiers: ["cmd"], key: "enter" }}
+                        shortcut={{ modifiers: ["cmd"], key: "d" }}
                       />
                       <Action.Push
                         title="Move to New Folder…"
@@ -378,7 +378,7 @@ export default function Command() {
                       title="Copy Files Here"
                       icon={Icon.CopyClipboard}
                       onAction={() => handleAction(fav.path, fav.name, true)}
-                      shortcut={{ modifiers: ["cmd"], key: "enter" }}
+                      shortcut={{ modifiers: ["cmd"], key: "d" }}
                     />
                     <Action.Push
                       title="Move to New Folder…"
@@ -434,7 +434,7 @@ export default function Command() {
                       onAction={() =>
                         handleAction(folder.path, folder.name, true)
                       }
-                      shortcut={{ modifiers: ["cmd"], key: "enter" }}
+                      shortcut={{ modifiers: ["cmd"], key: "d" }}
                     />
                     <Action.Push
                       title="Move to New Folder…"
