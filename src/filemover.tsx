@@ -84,7 +84,11 @@ export default function Command() {
           const e = error as NodeJS.ErrnoException;
           if (e.code === "EXDEV") {
             await fs.promises.cp(src, destPath, { recursive: true });
-            await fs.promises.rm(src, { recursive: true });
+            try {
+              await fs.promises.rm(src, { recursive: true });
+            } catch (rmError) {
+              throw new Error(`File copied to destination, but failed to remove original: ${rmError}`);
+            }
           } else {
             throw e;
           }
