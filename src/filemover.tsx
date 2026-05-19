@@ -350,113 +350,117 @@ export default function Command() {
         />
       )}
 
-      {searchResults.length > 0 && (
-        <List.Section title="Search Results">
-          {searchResults.map((folder, index) => (
-            <List.Item
-              key={`search-${index}`}
-              id={`search-${index}`}
-              title={folder.name}
-              subtitle={folder.path}
-              icon={Icon.MagnifyingGlass}
-              accessories={[{ text: path.dirname(folder.path), tooltip: folder.path }]}
-              detail={getFolderDetail(folder.path)}
-              actions={<FolderActionPanel folder={folder} />}
-            />
-          ))}
-        </List.Section>
+      {!isLoading && (
+        <>
+          {searchResults.length > 0 && (
+            <List.Section title="Search Results">
+              {searchResults.map((folder, index) => (
+                <List.Item
+                  key={`search-${index}`}
+                  id={`search-${index}`}
+                  title={folder.name}
+                  subtitle={folder.path}
+                  icon={Icon.MagnifyingGlass}
+                  accessories={[{ text: path.dirname(folder.path), tooltip: folder.path }]}
+                  detail={getFolderDetail(folder.path)}
+                  actions={<FolderActionPanel folder={folder} />}
+                />
+              ))}
+            </List.Section>
+          )}
+
+          {recents.length > 0 && (
+            <List.Section title="Recent Folders" subtitle={subtitle}>
+              {recents.map((folder, index) => (
+                <List.Item
+                  key={`recent-${index}`}
+                  title={folder.name}
+                  subtitle={folder.path}
+                  icon={Icon.Clock}
+                  accessories={[{ text: path.dirname(folder.path), tooltip: folder.path }]}
+                  detail={getFolderDetail(folder.path)}
+                  actions={<FolderActionPanel folder={folder} />}
+                />
+              ))}
+            </List.Section>
+          )}
+
+          <List.Section title="Favorites" subtitle={recents.length === 0 ? subtitle : ""}>
+            {favorites.map((fav, index) => (
+              <List.Item
+                key={`fav-${index}`}
+                title={fav.name}
+                subtitle={fav.path}
+                icon={Icon.Star}
+                accessories={[{ text: path.dirname(fav.path), tooltip: fav.path }]}
+                detail={getFolderDetail(fav.path)}
+                actions={<FolderActionPanel folder={fav} />}
+              />
+            ))}
+          </List.Section>
+
+          <List.Section title="Default Folders">
+            {DEFAULT_FOLDERS.map((folder, index) => (
+              <List.Item
+                key={`def-${index}`}
+                title={folder.name}
+                subtitle={folder.path}
+                icon={folder.icon}
+                detail={<List.Item.Detail markdown={detailMarkdown} />}
+                actions={
+                  <ActionPanel>
+                    <Action
+                      title="Move Files Here"
+                      icon={Icon.ArrowRight}
+                      onAction={() => handleAction(folder.path, folder.name, false)}
+                    />
+                    <Action
+                      title="Copy Files Here"
+                      icon={Icon.CopyClipboard}
+                      onAction={() => handleAction(folder.path, folder.name, true)}
+                      shortcut={{ modifiers: ["cmd"], key: "d" }}
+                    />
+                    <Action.Push
+                      title="Move to New Folder…"
+                      icon={Icon.NewFolder}
+                      target={<MoveToNewFolderForm onAction={handleAction} />}
+                      shortcut={{ modifiers: ["cmd"], key: "n" }}
+                    />
+                    <Action.Push
+                      title="Move to Custom Folder…"
+                      icon={Icon.Folder}
+                      target={<MoveToCustomFolderForm onAction={handleAction} />}
+                      shortcut={{ modifiers: ["cmd", "shift"], key: "f" }}
+                    />
+                    <Action.Push
+                      title="Add New Favorite…"
+                      icon={Icon.Plus}
+                      target={<AddFavoriteForm onAddFavorite={addFavorite} />}
+                      shortcut={{ modifiers: ["cmd", "shift"], key: "n" }}
+                    />
+                  </ActionPanel>
+                }
+              />
+            ))}
+            {favorites.length === 0 && (
+              <List.Item
+                title="Add New Favorite…"
+                icon={Icon.Plus}
+                detail={<List.Item.Detail markdown={detailMarkdown} />}
+                actions={
+                  <ActionPanel>
+                    <Action.Push
+                      title="Add New Favorite…"
+                      icon={Icon.Plus}
+                      target={<AddFavoriteForm onAddFavorite={addFavorite} />}
+                    />
+                  </ActionPanel>
+                }
+              />
+            )}
+          </List.Section>
+        </>
       )}
-
-      {recents.length > 0 && (
-        <List.Section title="Recent Folders" subtitle={subtitle}>
-          {recents.map((folder, index) => (
-            <List.Item
-              key={`recent-${index}`}
-              title={folder.name}
-              subtitle={folder.path}
-              icon={Icon.Clock}
-              accessories={[{ text: path.dirname(folder.path), tooltip: folder.path }]}
-              detail={getFolderDetail(folder.path)}
-              actions={<FolderActionPanel folder={folder} />}
-            />
-          ))}
-        </List.Section>
-      )}
-
-      <List.Section title="Favorites" subtitle={recents.length === 0 ? subtitle : ""}>
-        {favorites.map((fav, index) => (
-          <List.Item
-            key={`fav-${index}`}
-            title={fav.name}
-            subtitle={fav.path}
-            icon={Icon.Star}
-            accessories={[{ text: path.dirname(fav.path), tooltip: fav.path }]}
-            detail={getFolderDetail(fav.path)}
-            actions={<FolderActionPanel folder={fav} />}
-          />
-        ))}
-      </List.Section>
-
-      <List.Section title="Default Folders">
-        {DEFAULT_FOLDERS.map((folder, index) => (
-          <List.Item
-            key={`def-${index}`}
-            title={folder.name}
-            subtitle={folder.path}
-            icon={folder.icon}
-            detail={<List.Item.Detail markdown={detailMarkdown} />}
-            actions={
-              <ActionPanel>
-                <Action
-                  title="Move Files Here"
-                  icon={Icon.ArrowRight}
-                  onAction={() => handleAction(folder.path, folder.name, false)}
-                />
-                <Action
-                  title="Copy Files Here"
-                  icon={Icon.CopyClipboard}
-                  onAction={() => handleAction(folder.path, folder.name, true)}
-                  shortcut={{ modifiers: ["cmd"], key: "d" }}
-                />
-                <Action.Push
-                  title="Move to New Folder…"
-                  icon={Icon.NewFolder}
-                  target={<MoveToNewFolderForm onAction={handleAction} />}
-                  shortcut={{ modifiers: ["cmd"], key: "n" }}
-                />
-                <Action.Push
-                  title="Move to Custom Folder…"
-                  icon={Icon.Folder}
-                  target={<MoveToCustomFolderForm onAction={handleAction} />}
-                  shortcut={{ modifiers: ["cmd", "shift"], key: "f" }}
-                />
-                <Action.Push
-                  title="Add New Favorite…"
-                  icon={Icon.Plus}
-                  target={<AddFavoriteForm onAddFavorite={addFavorite} />}
-                  shortcut={{ modifiers: ["cmd", "shift"], key: "n" }}
-                />
-              </ActionPanel>
-            }
-          />
-        ))}
-        {favorites.length === 0 && (
-          <List.Item
-            title="Add New Favorite…"
-            icon={Icon.Plus}
-            detail={<List.Item.Detail markdown={detailMarkdown} />}
-            actions={
-              <ActionPanel>
-                <Action.Push
-                  title="Add New Favorite…"
-                  icon={Icon.Plus}
-                  target={<AddFavoriteForm onAddFavorite={addFavorite} />}
-                />
-              </ActionPanel>
-            }
-          />
-        )}
-      </List.Section>
     </List>
   );
 }
