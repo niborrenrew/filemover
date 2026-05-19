@@ -236,6 +236,12 @@ export default function Command() {
     await showToast({ title: "Removed from favorites" });
   }
 
+  async function clearRecents() {
+    setRecents([]);
+    await LocalStorage.removeItem("recents");
+    await showToast({ title: "Recent folders cleared" });
+  }
+
   const fileCount = selectedFiles.length;
   const subtitle = fileCount > 0 ? `${fileCount} file(s) selected` : "No files selected";
 
@@ -259,7 +265,7 @@ export default function Command() {
     );
   }
 
-  function FolderActionPanel({ folder }: { folder: { name: string; path: string } }) {
+  function FolderActionPanel({ folder, isRecent }: { folder: { name: string; path: string }; isRecent?: boolean }) {
     if (fileCount === 0) {
       return (
         <ActionPanel>
@@ -281,6 +287,15 @@ export default function Command() {
               onAction={() => removeFavorite(folder.path)}
               style={Action.Style.Destructive}
               shortcut={{ modifiers: ["ctrl"], key: "x" }}
+            />
+          )}
+          {isRecent && (
+            <Action
+              title="Clear All Recents"
+              icon={Icon.Trash}
+              onAction={clearRecents}
+              style={Action.Style.Destructive}
+              shortcut={{ modifiers: ["ctrl", "shift"], key: "x" }}
             />
           )}
         </ActionPanel>
@@ -327,6 +342,15 @@ export default function Command() {
             shortcut={{ modifiers: ["ctrl"], key: "x" }}
           />
         )}
+        {isRecent && (
+          <Action
+            title="Clear All Recents"
+            icon={Icon.Trash}
+            onAction={clearRecents}
+            style={Action.Style.Destructive}
+            shortcut={{ modifiers: ["ctrl", "shift"], key: "x" }}
+          />
+        )}
       </ActionPanel>
     );
   }
@@ -361,7 +385,7 @@ export default function Command() {
                   id={`search-${index}`}
                   title={folder.name}
                   subtitle={folder.path}
-                  icon={Icon.MagnifyingGlass}
+                  icon={Icon.Folder}
                   accessories={[{ text: path.dirname(folder.path), tooltip: folder.path }]}
                   detail={getFolderDetail(folder.path)}
                   actions={<FolderActionPanel folder={folder} />}
@@ -394,7 +418,7 @@ export default function Command() {
                   icon={Icon.Clock}
                   accessories={[{ text: path.dirname(folder.path), tooltip: folder.path }]}
                   detail={getFolderDetail(folder.path)}
-                  actions={<FolderActionPanel folder={folder} />}
+                  actions={<FolderActionPanel folder={folder} isRecent={true} />}
                 />
               ))}
             </List.Section>
