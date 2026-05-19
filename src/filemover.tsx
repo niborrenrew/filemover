@@ -78,7 +78,8 @@ export default function Command() {
       const storedRecents = await LocalStorage.getItem<string>("recents");
       if (storedRecents) {
         try {
-          setRecents(JSON.parse(storedRecents));
+          const parsedRecents = JSON.parse(storedRecents);
+          setRecents(parsedRecents.slice(0, 4));
         } catch {
           await LocalStorage.removeItem("recents");
         }
@@ -369,8 +370,22 @@ export default function Command() {
             </List.Section>
           )}
 
+          <List.Section title="Favorites" subtitle={subtitle}>
+            {favorites.map((fav, index) => (
+              <List.Item
+                key={`fav-${index}`}
+                title={fav.name}
+                subtitle={fav.path}
+                icon={Icon.Star}
+                accessories={[{ text: path.dirname(fav.path), tooltip: fav.path }]}
+                detail={getFolderDetail(fav.path)}
+                actions={<FolderActionPanel folder={fav} />}
+              />
+            ))}
+          </List.Section>
+
           {recents.length > 0 && (
-            <List.Section title="Recent Folders" subtitle={subtitle}>
+            <List.Section title="Recent Folders" subtitle={favorites.length === 0 ? subtitle : ""}>
               {recents.map((folder, index) => (
                 <List.Item
                   key={`recent-${index}`}
@@ -384,20 +399,6 @@ export default function Command() {
               ))}
             </List.Section>
           )}
-
-          <List.Section title="Favorites" subtitle={recents.length === 0 ? subtitle : ""}>
-            {favorites.map((fav, index) => (
-              <List.Item
-                key={`fav-${index}`}
-                title={fav.name}
-                subtitle={fav.path}
-                icon={Icon.Star}
-                accessories={[{ text: path.dirname(fav.path), tooltip: fav.path }]}
-                detail={getFolderDetail(fav.path)}
-                actions={<FolderActionPanel folder={fav} />}
-              />
-            ))}
-          </List.Section>
 
           <List.Section title="Default Folders">
             {DEFAULT_FOLDERS.map((folder, index) => (
