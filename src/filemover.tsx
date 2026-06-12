@@ -137,14 +137,16 @@ export default function Command() {
         const predicate = `kMDItemContentType == "public.folder" && kMDItemDisplayName == "*${safeQuery}*"cd`;
         let filteredPaths: string[] = [];
 
-        try {
-          const { stdout } = await execFileAsync("mdfind", ["-onlyin", os.homedir(), predicate], { timeout: 2000 });
-          const allPaths = stdout.split("\n").filter(Boolean);
-          filteredPaths = allPaths
-            .filter((p) => !p.includes("/Library/") && !p.includes("node_modules") && !p.includes(".git"))
-            .slice(0, 15);
-        } catch {
-          // Ignore mdfind errors or timeouts and rely on fallback
+        if (os.platform() === "darwin") {
+          try {
+            const { stdout } = await execFileAsync("mdfind", ["-onlyin", os.homedir(), predicate], { timeout: 2000 });
+            const allPaths = stdout.split("\n").filter(Boolean);
+            filteredPaths = allPaths
+              .filter((p) => !p.includes("/Library/") && !p.includes("node_modules") && !p.includes(".git"))
+              .slice(0, 15);
+          } catch {
+            // Ignore mdfind errors or timeouts and rely on fallback
+          }
         }
 
         // Fallback: If mdfind is broken, hangs, or lacks permissions, search common directories manually
