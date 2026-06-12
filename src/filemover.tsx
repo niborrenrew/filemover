@@ -147,6 +147,39 @@ export default function Command() {
           } catch {
             // Ignore mdfind errors or timeouts and rely on fallback
           }
+        } else if (os.platform() === "win32") {
+          try {
+            const psScript = `
+$conn = New-Object -ComObject ADODB.Connection
+$rs = New-Object -ComObject ADODB.Recordset
+$conn.Open("Provider=Search.CollatorDSO;Extended Properties='Application=Windows';")
+$query = "SELECT System.ItemPathDisplay FROM SYSTEMINDEX WHERE System.FileName LIKE '%${safeQuery}%' AND System.Kind = 'folder'"
+$rs.Open($query, $conn)
+$count = 0
+while (-not $rs.EOF -and $count -lt 30) {
+    $path = $rs.Fields.Item("System.ItemPathDisplay").Value
+    if ($path) { Write-Output $path }
+    $rs.MoveNext()
+    $count++
+}
+$rs.Close()
+$conn.Close()
+`;
+            const { stdout } = await execFileAsync(
+              "powershell.exe",
+              ["-NoProfile", "-NonInteractive", "-Command", psScript],
+              { timeout: 4000 },
+            );
+            const allPaths = stdout
+              .split("\n")
+              .map((p) => p.trim())
+              .filter(Boolean);
+            filteredPaths = allPaths
+              .filter((p) => !p.includes("node_modules") && !p.includes(".git") && !p.includes("AppData"))
+              .slice(0, 15);
+          } catch {
+            // Ignore powershell errors and rely on fallback
+          }
         }
 
         // Fallback: If mdfind is broken, hangs, or lacks permissions, search common directories manually
