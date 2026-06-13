@@ -76,12 +76,43 @@ export default function Command() {
   useEffect(() => {
     async function fetchSelectedFiles() {
       try {
-        const items = await getSelectedFinderItems();
-        const paths = items.map((item) => item.path);
-        setSelectedFiles((prev) => {
-          if (JSON.stringify(prev) !== JSON.stringify(paths)) return paths;
-          return prev;
-        });
+        if (os.platform() === "win32") {
+          const psScript = `
+$shell = New-Object -ComObject Shell.Application
+$selected = @()
+foreach ($window in $shell.Windows()) {
+    if ($window.FullName -like "*explorer.exe") {
+        $items = $window.Document.SelectedItems()
+        if ($items -and $items.Count -gt 0) {
+            foreach ($item in $items) {
+                $selected += $item.Path
+            }
+        }
+    }
+}
+$selected | Select-Object -Unique
+`;
+          const { stdout } = await execFileAsync(
+            "powershell.exe",
+            ["-NoProfile", "-NonInteractive", "-Command", psScript],
+            { timeout: 2000 },
+          );
+          const paths = stdout
+            .split("\n")
+            .map((p) => p.trim())
+            .filter(Boolean);
+          setSelectedFiles((prev) => {
+            if (JSON.stringify(prev) !== JSON.stringify(paths)) return paths;
+            return prev;
+          });
+        } else {
+          const items = await getSelectedFinderItems();
+          const paths = items.map((item) => item.path);
+          setSelectedFiles((prev) => {
+            if (JSON.stringify(prev) !== JSON.stringify(paths)) return paths;
+            return prev;
+          });
+        }
       } catch {
         setSelectedFiles((prev) => (prev.length > 0 ? [] : prev));
       }
