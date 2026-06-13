@@ -44,6 +44,10 @@ function formatIndex(index: number, format: string): string {
 }
 
 const execFileAsync = promisify(execFile);
+const isWin = os.platform() === "win32";
+const fileManagerName = isWin ? "Explorer" : "Finder";
+const cmdModifier = (isWin ? "ctrl" : "cmd") as "ctrl" | "cmd";
+
 const DEFAULT_FOLDERS = [
   {
     name: "Desktop",
@@ -423,7 +427,7 @@ $conn.Close()
       await showToast({
         style: Toast.Style.Failure,
         title: "No files selected",
-        message: "Please select files in Finder first.",
+        message: `Please select files in ${fileManagerName} first.`,
       });
       return;
     }
@@ -531,7 +535,7 @@ $conn.Close()
       ? `### Files to Move / Copy\n\n${selectedFiles
           .map((f) => `- **${path.basename(f)}**\n  \n  \`${f}\``)
           .join("\n\n")}`
-      : `### No files selected.\n\nOpen Finder and select files to move or copy them, or use this extension to manage your favorites.`;
+      : `### No files selected.\n\nOpen ${fileManagerName} and select files to move or copy them, or use this extension to manage your favorites.`;
 
   function getFolderDetail(folderPath: string) {
     return (
@@ -563,7 +567,7 @@ $conn.Close()
       {fileCount === 0 && (
         <List.EmptyView
           title="No files selected"
-          description="Select files in Finder or on your Desktop to move them."
+          description={`Select files in ${fileManagerName} or on your Desktop to move them.`}
           icon={Icon.Document}
           actions={
             <ActionPanel>
@@ -571,7 +575,7 @@ $conn.Close()
                 title="Undo Last File Move"
                 icon={Icon.Undo}
                 onAction={performUndo}
-                shortcut={{ modifiers: ["cmd"], key: "z" }}
+                shortcut={{ modifiers: [cmdModifier], key: "z" }}
               />
             </ActionPanel>
           }
@@ -686,37 +690,37 @@ $conn.Close()
                           onRenameAction={handleRenameAction}
                         />
                       }
-                      shortcut={{ modifiers: ["cmd"], key: "r" }}
+                      shortcut={{ modifiers: [cmdModifier], key: "r" }}
                     />
                     <Action
                       title="Copy Files Here"
                       icon={Icon.CopyClipboard}
                       onAction={() => handleAction(folder.path, folder.name, true)}
-                      shortcut={{ modifiers: ["cmd"], key: "d" }}
+                      shortcut={{ modifiers: [cmdModifier], key: "d" }}
                     />
                     <Action.Push
                       title="Move to New Folder…"
                       icon={Icon.NewFolder}
                       target={<MoveToNewFolderForm onAction={handleAction} />}
-                      shortcut={{ modifiers: ["cmd"], key: "n" }}
+                      shortcut={{ modifiers: [cmdModifier], key: "n" }}
                     />
                     <Action.Push
                       title="Move to Custom Folder…"
                       icon={Icon.Folder}
                       target={<MoveToCustomFolderForm onAction={handleAction} />}
-                      shortcut={{ modifiers: ["cmd", "shift"], key: "f" }}
+                      shortcut={{ modifiers: [cmdModifier, "shift"], key: "f" }}
                     />
                     <Action.Push
                       title="Add New Favorite…"
                       icon={Icon.Plus}
                       target={<AddFavoriteForm onAddFavorite={addFavorite} />}
-                      shortcut={{ modifiers: ["cmd", "shift"], key: "n" }}
+                      shortcut={{ modifiers: [cmdModifier, "shift"], key: "n" }}
                     />
                     <Action
                       title="Undo Last File Move"
                       icon={Icon.Undo}
                       onAction={performUndo}
-                      shortcut={{ modifiers: ["cmd"], key: "z" }}
+                      shortcut={{ modifiers: [cmdModifier], key: "z" }}
                     />
                   </ActionPanel>
                 }
@@ -777,7 +781,7 @@ function FolderActionPanel({
           title="Undo Last File Move"
           icon={Icon.Undo}
           onAction={performUndo}
-          shortcut={{ modifiers: ["cmd"], key: "z" }}
+          shortcut={{ modifiers: [cmdModifier], key: "z" }}
         />
         <Action.Push
           title="Add to Favorites"
@@ -788,7 +792,7 @@ function FolderActionPanel({
           title="Move to Custom Folder…"
           icon={Icon.Folder}
           target={<MoveToCustomFolderForm onAction={onAction} />}
-          shortcut={{ modifiers: ["cmd", "shift"], key: "f" }}
+          shortcut={{ modifiers: [cmdModifier, "shift"], key: "f" }}
         />
         {favorites.some((f) => f.path === folder.path) && (
           <Action
@@ -826,38 +830,38 @@ function FolderActionPanel({
           target={
             <RenameAndMoveForm destinationPath={folder.path} folderName={folder.name} onRenameAction={onRenameAction} />
           }
-          shortcut={{ modifiers: ["cmd"], key: "r" }}
+          shortcut={{ modifiers: [cmdModifier], key: "r" }}
         />
       )}
       <Action
         title="Copy Files Here"
         icon={Icon.CopyClipboard}
         onAction={() => onAction(folder.path, folder.name, true)}
-        shortcut={{ modifiers: ["cmd"], key: "d" }}
+        shortcut={{ modifiers: [cmdModifier], key: "d" }}
       />
       <Action.Push
         title="Move to New Folder…"
         icon={Icon.NewFolder}
         target={<MoveToNewFolderForm onAction={onAction} />}
-        shortcut={{ modifiers: ["cmd"], key: "n" }}
+        shortcut={{ modifiers: [cmdModifier], key: "n" }}
       />
       <Action.Push
         title="Move to Custom Folder…"
         icon={Icon.Folder}
         target={<MoveToCustomFolderForm onAction={onAction} />}
-        shortcut={{ modifiers: ["cmd", "shift"], key: "f" }}
+        shortcut={{ modifiers: [cmdModifier, "shift"], key: "f" }}
       />
       <Action.Push
         title="Add to Favorites"
         icon={Icon.Star}
         target={<AddFavoriteForm onAddFavorite={onAddFavorite} />}
-        shortcut={{ modifiers: ["cmd", "shift"], key: "a" }}
+        shortcut={{ modifiers: [cmdModifier, "shift"], key: "a" }}
       />
       <Action
         title="Undo Last File Move"
         icon={Icon.Undo}
         onAction={performUndo}
-        shortcut={{ modifiers: ["cmd"], key: "z" }}
+        shortcut={{ modifiers: [cmdModifier], key: "z" }}
       />
       {favorites.some((f) => f.path === folder.path) && (
         <Action
