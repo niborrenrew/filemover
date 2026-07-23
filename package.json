@@ -1,7 +1,7 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
-  "name": "filemover",
-  "description": "Move or copy selected Finder items to favorites, recents, or custom folders.",
+  "name": "universal-file-router",
+  "description": "Cross-platform file routing, instant folder creation, batch renaming, history, and system-wide undo for macOS & Windows.",
   "license": "MIT",
   "scripts": {
     "dev": "ray develop",
@@ -25,10 +25,11 @@
   "icon": "icon-v2.png",
   "commands": [
     {
-      "name": "filemover",
+      "name": "universal-file-router",
       "title": "Move Files",
-      "description": "Move or copy currently selected Finder items to a specific directory.",
-      "mode": "view"
+      "description": "Move, copy, or batch-rename currently selected files across macOS and Windows.",
+      "mode": "view",
+      "path": "src/filemover.tsx"
     },
     {
       "name": "undo",
@@ -43,7 +44,7 @@
       "mode": "view"
     }
   ],
-  "title": "File Mover",
+  "title": "Universal File Router",
   "author": "robinwerner",
   "platforms": [
     "macOS",

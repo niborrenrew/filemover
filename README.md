@@ -1,8 +1,8 @@
-# Filemover
+# Universal File Router
 
-Filemover is a highly efficient Raycast extension that allows you to instantly move or copy currently selected files in macOS Finder (or your Desktop) and Windows File Explorer to predefined or custom folders without taking your hands off the keyboard.
+Universal File Router is a blazing-fast, cross-platform Raycast extension that allows you to instantly move or copy selected files in macOS Finder (or Desktop) and Windows File Explorer to predefined or custom folders without taking your hands off the keyboard.
 
-A blazing fast and powerful extension to route, rename, and manage your files system-wide without ever touching a Finder or Explorer window.
+A powerful tool to route files, create new folders on-the-fly, batch-rename, and manage your files system-wide across macOS and Windows with built-in action history and global undo.
 
 ![Filemover Demo](assets/FM_BatchRename_History_Undo_Demo.gif)
 
@@ -20,7 +20,7 @@ A blazing fast and powerful extension to route, rename, and manage your files sy
 ## Usage
 
 1. Select one or multiple files in Finder, on your Mac Desktop, or in Windows Explorer.
-2. Open Raycast and run the `Filemover` command.
+2. Open Raycast and run the `Move Files` command.
 3. The extension will display your Favorite, Recent, and Default (Downloads, Desktop, Documents) folders.
 4. Highlight a target folder and press:
    - `Enter` to Move
