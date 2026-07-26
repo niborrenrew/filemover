@@ -54,7 +54,7 @@ function getUniquePath(targetPath: string): string {
 
 function isOriginalOutputFile(
   file: { newPath: string; ctimeMs?: number; ino?: number },
-  historyTimestamp: number
+  historyTimestamp: number,
 ): boolean {
   if (!fs.existsSync(file.newPath)) return false;
   try {
